@@ -122,15 +122,16 @@
     .info-box.red svg { stroke: #dc2626; fill: none; }
 
     /* ── Field Table ─────────────────────────────────────────────────────── */
-    .field-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+    .field-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13.5px; margin: 16px 0; background: #fff; border: 1px solid #e5e9f2; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 2px rgba(15,52,96,0.04); }
     .field-table th {
-      background: #f1f5f9; padding: 8px 12px; text-align: left; font-weight: 700; color: #475569;
-      font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0;
+      background: #eef2f9; padding: 11px 16px; text-align: left; font-weight: 700; color: #334155;
+      font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 1px solid #dde3ee;
     }
-    .field-table td { padding: 9px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
-    .field-table tr:last-child td { border-bottom: none; }
-    .field-table tr:hover td { background: #f8fafc; }
-    .field-table .field-name { font-weight: 600; color: #1e293b; }
+    .field-table td { padding: 12px 16px; border-bottom: 1px solid #eef1f6; vertical-align: top; color: #334155; line-height: 1.6; }
+    .field-table tbody tr:last-child td { border-bottom: none; }
+    .field-table tbody tr:nth-child(even) td { background: #f8fafc; }
+    .field-table tbody tr:hover td { background: #eff5ff; }
+    .field-table .field-name { font-weight: 700; color: #0f3460; }
     .field-table code { white-space: nowrap; }
     .tbl-wrap { overflow-x: auto; }
     .pill {
@@ -268,7 +269,7 @@
 
   <div class="sidebar-footer">
     Enfono Technologies<br>
-    ERPNext v15 · <a href="https://github.com/lavaloon-eg/ksa_compliance">ksa_compliance</a>
+    ERPNext v15 · <a href="https://github.com/EnfonoTech/ksa_compliance">ksa_compliance</a>
   </div>
 </aside>
 
@@ -294,7 +295,7 @@
       <div class="section-subtitle">What ZATCA e-invoicing is, and what this guide covers.</div>
       <div class="prose">
         <p><strong>ZATCA</strong> (Zakat, Tax and Customs Authority) is Saudi Arabia's tax authority. It mandates that every business issue and store its invoices, and its debit and credit notes, in a structured <strong>electronic</strong> format — a scanned or PDF copy of a paper invoice does <em>not</em> qualify. The compliance programme is branded <strong>Fatoora</strong>.</p>
-        <p>This guide documents how Enfono implements that mandate on <strong>ERPNext</strong> using the open-source <strong>ksa_compliance</strong> app (LavaLoon). It walks a company from a clean ERPNext install through configuration, ZATCA onboarding, live invoicing, and the day-two operations of syncing invoices to the Fatoora platform.</p>
+        <p>This guide documents how Enfono implements that mandate on <strong>ERPNext</strong> using Enfono's <strong>ksa_compliance</strong> app. It walks a company from a clean ERPNext install through configuration, ZATCA onboarding, live invoicing, and the day-two operations of syncing invoices to the Fatoora platform.</p>
         <h3>What this guide covers</h3>
         <ol>
           <li><strong>Prerequisites</strong> — the ERPNext, company, address, tax, and server setup required before touching ZATCA.</li>
@@ -378,7 +379,7 @@
           <div class="step-body"><h3>ERPNext + ksa_compliance installed</h3>
             <p>A v15 bench with ERPNext and the <code>ksa_compliance</code> app installed on the site.</p>
 <pre><code><span class="c"># on the server, from frappe-bench/</span>
-bench get-app https://github.com/lavaloon-eg/ksa_compliance
+bench get-app https://github.com/EnfonoTech/ksa_compliance
 bench --site <span class="p">&lt;site&gt;</span> install-app ksa_compliance
 bench --site <span class="p">&lt;site&gt;</span> migrate</code></pre>
           </div>
@@ -547,14 +548,14 @@ bench --site <span class="p">&lt;site&gt;</span> migrate</code></pre>
       <div class="section-subtitle">The CLI is an open-source tool that generates CSRs and validates/signs invoice XML. It needs a Java 11 runtime.</div>
       <div class="callout blue">
         <h4>Automatic vs Manual</h4>
-        <p><strong>Automatic:</strong> from the CLI tab, one click downloads the CLI + Temurin JRE 11. Override URLs are configurable; if left blank the app uses the LavaLoon CLI release and the Adoptium JRE 11 build.</p>
+        <p><strong>Automatic:</strong> from the CLI tab, one click downloads the CLI + Temurin JRE 11. Override URLs are configurable; if left blank the app uses its default CLI release and the Adoptium JRE 11 build.</p>
         <p><strong>Manual:</strong> deploy the CLI and a Java 11 runtime yourself, then set the CLI path in settings. Use this on locked-down servers or when auto-download is blocked.</p>
       </div>
       <div class="prose"><h3>Manual install — reference steps</h3>
         <p>Run as the <code>frappe</code> user. Adjust versions to the CLI release you are targeting.</p>
       </div>
 <pre><code><span class="c"># 1 — Download & extract the ZATCA CLI (in the home folder)</span>
-wget https://github.com/lavaloon-eg/zatca-cli/releases/download/2.5.0/zatca-cli-2.5.0.zip
+wget "$CLI_URL/zatca-cli-2.5.0.zip"   # $CLI_URL = release URL from the app's CLI tab
 unzip zatca-cli-2.5.0.zip -d zatca-cli-2.5.0
 rm -f zatca-cli-2.5.0.zip
 cd /home/frappe/zatca-cli-2.5.0
